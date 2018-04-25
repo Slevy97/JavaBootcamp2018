@@ -5,10 +5,17 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Iterator;
+
+@Component
+@Profile("exceldb")
 
 public final class VehicleInfoExcelFileDao extends VehicleInfoAbstractDao {
 
@@ -20,9 +27,17 @@ public final class VehicleInfoExcelFileDao extends VehicleInfoAbstractDao {
     private static final int VEHICLE_MILES = 4;
     private static final int VEHICLE_IS_DIESEL = 5;
 
-    public VehicleInfoExcelFileDao(String filePath) {
+    @Value("${filepath}")
+    private String filePath;
+
+    public VehicleInfoExcelFileDao() {
 
         super();
+    }
+
+    @PostConstruct
+    public void init() {
+
         final File inputFile = new File(filePath);
 
         try (final InputStream inputStream = new FileInputStream(inputFile)) {
